@@ -70,8 +70,9 @@ var portakal = Item{
 }
 
 func main() {
-	var items []Item
-	items = append(items, elma)
-	items = append(items, portakal)
+	items := []Item{
+		elma,
+		portakal,
+	}
 	PrintItems(items)
 }
