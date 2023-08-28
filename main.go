@@ -15,13 +15,16 @@ type Describable interface {
 func (item Item) Description() string {
 	result := fmt.Sprintf("%s - %.2f TL", item.Name, item.Price)
 	if item.Discount > 0 {
-		result += fmt.Sprintf("(%.2f TL indirimle %.2f TL)", item.Discount, CalculatePrice(item))
+		result += fmt.Sprintf(" (%.2f %% indirimle %.2f TL)", CalculateDiscount(item), CalculatePrice(item))
 	}
 	return result
 }
 
 func CalculatePrice(item Item) float64 {
 	return item.Price - item.Discount
+}
+func CalculateDiscount(item Item) float64 {
+	return item.Discount / item.Price * 100
 }
 
 func TotalPrice(items []Item) (total float64) {
@@ -63,7 +66,7 @@ var elma = Item{
 var portakal = Item{
 	Name:     "Portakal",
 	Price:    0.75,
-	Discount: 0.07,
+	Discount: 0,
 }
 
 func main() {
