@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 // Item struct represents a product with its name, price, and discount.
 type Item struct {
@@ -9,6 +12,9 @@ type Item struct {
 	Discount float64
 }
 
+// Items struct is used to hold a collection of items.
+type Items []Item
+
 // Describable interface defines a method for providing a description of an item.
 type Describable interface {
 	Description() string
@@ -16,11 +22,32 @@ type Describable interface {
 
 // Description calculates and returns the description of an item.
 func (item Item) Description() string {
-	result := fmt.Sprintf("%s - %.2f TL", item.Name, item.Price)
+	description := fmt.Sprintf("%s - %.2f TL", item.Name, item.Price)
 	if item.Discount > 0 {
-		result += fmt.Sprintf(" (%.2f %% indirimle %.2f TL)", CalculateDiscount(item), CalculatePrice(item))
+		description += fmt.Sprintf(" (%.2f %% indirimle %.2f TL)", CalculateDiscount(item), CalculatePrice(item))
 	}
-	return result
+	return description
+}
+
+// Format formats the item based on the provided verb.
+func (item Item) Format(f fmt.State, verb rune) {
+	var value interface{} = item
+	if verb == 'Q' { // 'Q' verb is used for description
+		value = item.Description()
+	}
+	_, err := fmt.Fprint(f, value)
+	if err != nil {
+		return
+	}
+}
+
+// Description returns a description of the collection of items.
+func (items Items) Description() string {
+	var descriptions []string
+	for _, item := range items {
+		descriptions = append(descriptions, fmt.Sprintf("%Q", item))
+	}
+	return strings.Join(descriptions, "\n")
 }
 
 // CalculatePrice calculates the discounted price of an item.
@@ -41,48 +68,30 @@ func TotalPrice(items []Item) (total float64) {
 	return
 }
 
-// PrintItem prints the description of a Describable item.
-func PrintItem(item Describable) {
-	fmt.Printf("%Q\n", item)
-}
-
-// PrintItems prints the description of a list of items and the total price.
-func PrintItems(items []Item) {
-	for _, item := range items {
-		PrintItem(item)
-	}
+func (items Items) Print() {
+	fmt.Println(items.Description())
 	totalPrice := TotalPrice(items)
 	fmt.Printf("Toplam Fiyat: %.2f", totalPrice)
 }
 
-// Format formats the item based on the provided verb.
-func (item Item) Format(f fmt.State, verb rune) {
-	var value interface{} = item
-	if verb == 81 { // 'Q' verb is used for description
-		value = item.Description()
-	}
-	_, err := fmt.Fprint(f, value)
-	if err != nil {
-		return
-	}
-}
-
-var elma = Item{
-	Name:     "Elma",
-	Price:    0.75,
-	Discount: 0.07,
-}
-
-var portakal = Item{
-	Name:     "Portakal",
-	Price:    0.75,
-	Discount: 0,
-}
-
 func main() {
-	items := []Item{
+	// Sample items
+	elma := Item{
+		Name:     "Elma",
+		Price:    0.75,
+		Discount: 0.07,
+	}
+	portakal := Item{
+		Name:     "Portakal",
+		Price:    0.75,
+		Discount: 0,
+	}
+
+	// Create a collection of items
+	items := Items{
 		elma,
 		portakal,
 	}
-	PrintItems(items)
+	// Print descriptions of items and calculate total price
+	items.Print()
 }
