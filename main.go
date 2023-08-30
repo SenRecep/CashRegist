@@ -71,7 +71,7 @@ func TotalPrice(items []Item) (total float64) {
 func (items Items) Print() {
 	Print(items)
 	totalPrice := TotalPrice(items)
-	fmt.Printf("Toplam Fiyat: %.2f", totalPrice)
+	fmt.Printf("Toplam Fiyat: %.2f\n", totalPrice)
 }
 
 func Print[T Describable](item T) {
