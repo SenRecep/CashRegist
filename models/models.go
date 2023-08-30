@@ -22,16 +22,22 @@ type Describable interface {
 
 // CalculatePrice calculates the discounted price of an item.
 func CalculatePrice(item *Item) float64 {
+	if item.Price < item.Discount {
+		return 0
+	}
 	return item.Price - item.Discount
 }
 
 // CalculateDiscount calculates the discount percentage of an item.
 func CalculateDiscount(item *Item) float64 {
+	if item.Price < item.Discount {
+		return 100
+	}
 	return (item.Discount / item.Price) * 100
 }
 
 // TotalPrice calculates the total price of a list of items.
-func TotalPrice(items []Item) (total float64) {
+func TotalPrice(items Items) (total float64) {
 	for _, item := range items {
 		total += CalculatePrice(&item)
 	}
