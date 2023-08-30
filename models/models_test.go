@@ -2,6 +2,7 @@ package models_test
 
 import (
 	"cashregister/models"
+	"fmt"
 	"testing"
 )
 
@@ -116,7 +117,6 @@ func TestItems_Description(t *testing.T) {
 	}
 }
 
-/*
 func TestItem_Format(t *testing.T) {
 	tests := map[string]struct {
 		input models.Item
@@ -130,7 +130,7 @@ func TestItem_Format(t *testing.T) {
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			got := fmt.Sprintf("%Q", tc.input)
+			got := fmt.Sprintf("%Q", &tc.input)
 
 			if got != tc.want {
 				t.Errorf("want: %v; got: %v", tc.want, got)
@@ -138,4 +138,3 @@ func TestItem_Format(t *testing.T) {
 		})
 	}
 }
-*/
